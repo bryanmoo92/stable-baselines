@@ -8,7 +8,8 @@ import warnings
 import gym
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib as tc
+#import tensorflow.contrib as tc
+import tensorflow.keras.layers as tf_layers
 from mpi4py import MPI
 
 from stable_baselines import logger
@@ -520,8 +521,8 @@ class DDPG(OffPolicyRLModel):
                 for var in critic_reg_vars:
                     logger.info('  regularizing: {}'.format(var.name))
                 logger.info('  applying l2 regularization with {}'.format(self.critic_l2_reg))
-            critic_reg = tc.layers.apply_regularization(
-                tc.layers.l2_regularizer(self.critic_l2_reg),
+            critic_reg = tf_layers.apply_regularization(
+                tf_layers.l2_regularizer(self.critic_l2_reg),
                 weights_list=critic_reg_vars
             )
             self.critic_loss += critic_reg
