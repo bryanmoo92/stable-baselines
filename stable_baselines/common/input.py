@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
 from gym.spaces import Discrete, Box, MultiBinary, MultiDiscrete
-print(tf.compat.v1.placeholder, 'wtf')
 
 def observation_input(ob_space, batch_size=None, name='Ob', scale=False):
     """
