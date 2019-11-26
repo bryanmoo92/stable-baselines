@@ -174,7 +174,7 @@ class DataLoader(object):
 
     Original code for the dataloader from https://github.com/araffin/robotics-rl-srl
     (MIT licence)
-    Authors: Antonin Raffin, René Traoré, Ashley Hill
+    Authors: Antonin Raffin, Ren Traor, Ashley Hill
 
     :param indices: ([int]) list of observations indices
     :param observations: (np.ndarray) observations or images path
