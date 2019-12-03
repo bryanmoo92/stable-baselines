@@ -109,23 +109,27 @@ class FeedForwardPolicy(DQNPolicy):
                 else:
                     extracted_features = tf.compat.v1.layers.flatten(self.processed_obs)
                     action_out = extracted_features
-                    for layer_size in layers:
-                        action_out = tf_layers.fully_connected(action_out, num_outputs=layer_size, activation_fn=None)
+                    for i, layer_size in enumerate(layers):
+                        #action_out = tf_layers.fully_connected(action_out, num_outputs=layer_size, activation_fn=None)
+                        action_out = tf.compat.v1.layers.Dense(layer_size, input_shape=action_out.shape, activation=None)(action_out)
                         if layer_norm:
-                            action_out = tf_layers.layer_norm(action_out, center=True, scale=True)
+                            action_out = tf_layers.LayerNormalization(action_out, center=True, scale=True)(action_out)
                         action_out = act_fun(action_out)
 
-                action_scores = tf_layers.fully_connected(action_out, num_outputs=self.n_actions, activation_fn=None)
+                #action_scores = tf_layers.fully_connected(action_out, num_outputs=self.n_actions, activation_fn=None)
+                action_scores = tf_layers.Dense(self.n_actions, input_shape=action_out.shape, activation=None)(action_out)
 
             if self.dueling:
                 with tf.compat.v1.variable_scope("state_value"):
                     state_out = extracted_features
                     for layer_size in layers:
-                        state_out = tf_layers.fully_connected(state_out, num_outputs=layer_size, activation_fn=None)
+                        #state_out = tf_layers.fully_connected(state_out, num_outputs=layer_size, activation_fn=None)
+                        state_out = tf.compat.v1.layers.Dense(layer_size, input_shape=state_out.shape, activation=None)(state_out)
                         if layer_norm:
-                            state_out = tf_layers.layer_norm(state_out, center=True, scale=True)
+                            state_out = tf_layers.LayerNormalization(state_out, center=True, scale=True)(state_out)
                         state_out = act_fun(state_out)
-                    state_score = tf_layers.fully_connected(state_out, num_outputs=1, activation_fn=None)
+                    #state_score = tf_layers.fully_connected(state_out, num_outputs=1, activation_fn=None)
+                    state_score = tf_layers.Dense(1, input_shape=state_out.shape, activation=None)(state_out)
                 action_scores_mean = tf.reduce_mean(input_tensor=action_scores, axis=1)
                 action_scores_centered = action_scores - tf.expand_dims(action_scores_mean, axis=1)
                 q_out = state_score + action_scores_centered
